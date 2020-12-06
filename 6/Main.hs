@@ -1,17 +1,16 @@
 {-# LANGUAGE LambdaCase #-}
 module Main where
 
+import           Control.Arrow
 import           Data.List
-
-countYes :: [String] -> Int
-countYes = length . nub . concat
 
 main :: IO ()
 main =
   readFile "input.txt"
     >>= print
-    .   sum
-    .   map countYes
+    .   (sum . map (length . nub . concat) &&& sum . map
+          (length . foldr1 intersect)
+        )
     .   foldr
           (\l -> \case
             []        -> [[l]]
